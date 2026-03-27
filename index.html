@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vincent de Lara — AI Automation Specialist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,700&family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Fraunces', 'serif'],
+            body: ['Bricolage Grotesque', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            ink: '#06080f',
+            surface: '#0c1018',
+            elevated: '#111722',
+            border: '#1c2538',
+            gold: '#e8a020',
+            'gold-light': '#f2bf5e',
+            'gold-dim': '#a06d10',
+            mint: '#3dd6a3',
+            'mint-dim': '#1a8a65',
+            slate: '#dde4f0',
+            muted: '#5a6a8a',
+            dim: '#8a9ab8',
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --gold: #e8a020;
+      --gold-light: #f2bf5e;
+      --mint: #3dd6a3;
+      --ink: #06080f;
+      --surface: #0c1018;
+      --elevated: #111722;
+      --border: #1c2538;
+      --slate: #dde4f0;
+      --muted: #5a6a8a;
+      --dim: #8a9ab8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      background: var(--ink);
+      color: var(--slate);
+      overflow-x: hidden;
+    }
+
+    /* ── BACKGROUND GRID ── */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(232,160,32,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(232,160,32,0.035) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .bg-glow-1 {
+      position: fixed;
+      top: -20%;
+      right: -10%;
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(232,160,32,0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .bg-glow-2 {
+      position: fixed;
+      bottom: -20%;
+      left: -10%;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(61,214,163,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    .noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 1140px; margin: 0 auto; padding: 0 2rem; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1.25rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(28,37,56,0.6);
+      background: rgba(6,8,15,0.7);
+      backdrop-filter: blur(20px);
+    }
+
+    .nav-logo {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--gold-light);
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.25s ease;
+    }
+
+    .nav-links a:hover { color: var(--gold-light); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8rem 2rem 4rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.85rem;
+      border: 1px solid rgba(232,160,32,0.3);
+      border-radius: 100px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      background: rgba(232,160,32,0.05);
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: pulse 2s ease infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    .hero-name {
+      font-family: 'Fraunces', serif;
+      font-weight: 900;
+      font-size: clamp(4rem, 10vw, 9rem);
+      line-height: 0.9;
+      letter-spacing: -0.04em;
+      color: var(--slate);
+      margin-bottom: 0.15em;
+      animation: fadeUp 0.8s 0.1s ease both;
+    }
+
+    .hero-name span {
+      color: var(--gold);
+      font-style: italic;
+    }
+
+    .hero-subtitle {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(0.75rem, 1.5vw, 0.95rem);
+      color: var(--mint);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    .hero-desc {
+      max-width: 560px;
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: var(--dim);
+      margin-bottom: 3rem;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      animation: fadeUp 0.8s 0.4s ease both;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 2rem;
+      background: var(--gold);
+      color: var(--ink);
+      border-radius: 4px;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 4px 24px rgba(232,160,32,0.25), 0 2px 8px rgba(232,160,32,0.15);
+    }
+
+    .btn-primary:hover {
+      background: var(--gold-light);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(232,160,32,0.35), 0 4px 12px rgba(232,160,32,0.2);
+    }
+
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 2rem;
+      border: 1px solid var(--border);
+      color: var(--dim);
+      border-radius: 4px;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 500;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--gold);
+      color: var(--gold-light);
+      transform: translateY(-2px);
+    }
+
+    .btn-ghost:active { transform: translateY(0); }
+
+    /* HERO STATS */
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 5rem;
+      animation: fadeUp 0.8s 0.5s ease both;
+    }
+
+    .stat-item {
+      background: var(--surface);
+      padding: 1.5rem 2rem;
+      position: relative;
+    }
+
+    .stat-item:hover { background: var(--elevated); }
+
+    .stat-num {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: 2.5rem;
+      color: var(--gold-light);
+      line-height: 1;
+      margin-bottom: 0.35rem;
+    }
+
+    .stat-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ── SECTION STYLES ── */
+    section { position: relative; z-index: 2; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .section-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--gold);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.65rem;
+      border: 1px solid rgba(232,160,32,0.25);
+      border-radius: 3px;
+      background: rgba(232,160,32,0.05);
+      white-space: nowrap;
+    }
+
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--border), transparent);
+    }
+
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--slate);
+      margin-bottom: 1rem;
+    }
+
+    .section-title em {
+      color: var(--gold);
+      font-style: italic;
+    }
+
+    /* ── ABOUT ── */
+    #about {
+      padding: 6rem 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .about-text {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--dim);
+    }
+
+    .about-text p + p { margin-top: 1.25rem; }
+
+    .highlight { color: var(--gold-light); font-weight: 500; }
+
+    .contact-details {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .contact-row {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--surface);
+      text-decoration: none;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .contact-row:hover {
+      border-color: rgba(232,160,32,0.35);
+      background: var(--elevated);
+    }
+
+    .contact-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      background: rgba(232,160,32,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .contact-icon svg { width: 14px; height: 14px; color: var(--gold); }
+
+    .contact-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 0.15rem;
+    }
+
+    .contact-value {
+      font-size: 0.85rem;
+      color: var(--dim);
+    }
+
+    /* ── SKILLS ── */
+    #skills {
+      padding: 6rem 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .skill-card {
+      padding: 1.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .skill-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .skill-card:hover {
+      border-color: rgba(232,160,32,0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 2px 8px rgba(232,160,32,0.1);
+    }
+
+    .skill-card:hover::before { opacity: 1; }
+
+    .skill-category {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .skill-card h3 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--slate);
+      margin-bottom: 1rem;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .skill-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 3px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      color: var(--dim);
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .skill-card:hover .skill-tag {
+      background: rgba(232,160,32,0.06);
+      border-color: rgba(232,160,32,0.2);
+      color: var(--gold-light);
+    }
+
+    /* ── ACHIEVEMENTS ── */
+    #achievements {
+      padding: 6rem 2rem;
+      border-top: 1px solid var(--border);
+      background: linear-gradient(180deg, transparent, rgba(232,160,32,0.025) 50%, transparent);
+    }
+
+    .achievements-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 4rem;
+    }
+
+    .achievement-card {
+      padding: 2rem 1.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      text-align: center;
+      transition: border-color 0.25s ease, transform 0.25s ease;
+    }
+
+    .achievement-card:hover {
+      border-color: rgba(232,160,32,0.35);
+      transform: translateY(-3px);
+    }
+
+    .achievement-num {
+      font-family: 'Fraunces', serif;
+      font-size: 3rem;
+      font-weight: 900;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .achievement-num sup {
+      font-size: 1.5rem;
+      vertical-align: top;
+      margin-top: 0.3rem;
+      display: inline-block;
+    }
+
+    .achievement-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .achievement-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .achievement-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 1rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--surface);
+    }
+
+    .achievement-item::before {
+      content: '→';
+      color: var(--mint);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .achievement-item p {
+      font-size: 0.875rem;
+      line-height: 1.55;
+      color: var(--dim);
+    }
+
+    /* ── PROJECTS ── */
+    #projects {
+      padding: 6rem 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .project-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      overflow: hidden;
+      transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-card:hover {
+      border-color: rgba(61,214,163,0.3);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 4px 12px rgba(61,214,163,0.08);
+    }
+
+    .project-top {
+      padding: 1.75rem;
+      border-bottom: 1px solid var(--border);
+      flex: 1;
+    }
+
+    .project-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--mint);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    .project-card h3 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--slate);
+      margin-bottom: 0.6rem;
+      line-height: 1.3;
+    }
+
+    .project-card p {
+      font-size: 0.875rem;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    .project-bottom {
+      padding: 1rem 1.75rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .project-tech {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 3px;
+      background: rgba(61,214,163,0.06);
+      border: 1px solid rgba(61,214,163,0.15);
+      color: var(--mint-dim);
+    }
+
+    /* ── EXPERIENCE ── */
+    #experience {
+      padding: 6rem 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 2.5rem;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: linear-gradient(180deg, var(--gold), var(--border), transparent);
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-bottom: 3rem;
+    }
+
+    .timeline-item:last-child { padding-bottom: 0; }
+
+    .timeline-dot {
+      position: absolute;
+      left: -2.75rem;
+      top: 0.4rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 2px solid var(--ink);
+      box-shadow: 0 0 12px rgba(232,160,32,0.5);
+    }
+
+    .timeline-date {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--gold);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-title {
+      font-family: 'Fraunces', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--slate);
+      margin-bottom: 0.2rem;
+    }
+
+    .timeline-company {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .timeline-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .timeline-bullets li {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--dim);
+      padding-left: 1rem;
+      position: relative;
+    }
+
+    .timeline-bullets li::before {
+      content: '·';
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+      font-size: 1.2rem;
+      line-height: 1.3;
+    }
+
+    /* ── EDUCATION ── */
+    #education {
+      padding: 6rem 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .edu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .edu-card {
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .edu-card:hover {
+      border-color: rgba(232,160,32,0.25);
+      background: var(--elevated);
+    }
+
+    .edu-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      background: rgba(232,160,32,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 1rem;
+    }
+
+    .edu-type {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+
+    .edu-card h3 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--slate);
+      line-height: 1.45;
+    }
+
+    .edu-card p {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .footer-name {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--gold-light);
+    }
+
+    .footer-copy {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── DIVIDER ── */
+    .divider-dot {
+      display: inline-block;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--muted);
+      vertical-align: middle;
+      margin: 0 0.5rem;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .hero-stats { grid-template-columns: 1fr; }
+      .achievement-list { grid-template-columns: 1fr; }
+      .edu-grid { grid-template-columns: 1fr; }
+      .hero-name { font-size: clamp(3rem, 14vw, 4rem); }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--ink); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+  </style>
+</head>
+<body>
+
+  <!-- Background elements -->
+  <div class="bg-grid"></div>
+  <div class="bg-glow-1"></div>
+  <div class="bg-glow-2"></div>
+  <div class="noise"></div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">VDL</div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#education">Education</a></li>
+    </ul>
+    <a href="mailto:techvavdf@gmail.com" class="btn-primary" style="padding:0.55rem 1.25rem;font-size:0.8rem;">
+      Hire Me
+    </a>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="container">
+      <div class="hero-badge">Available for Remote Work</div>
+
+      <h1 class="hero-name">
+        Vincent<br />
+        <span>de Lara</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        AI Automation Specialist&nbsp;&nbsp;·&nbsp;&nbsp;GoHighLevel Expert&nbsp;&nbsp;·&nbsp;&nbsp;Systems VA
+      </p>
+
+      <p class="hero-desc">
+        Results-driven specialist with <span class="highlight">7+ months</span> building scalable workflows, CRM automations, and AI-powered systems. Helping businesses save <span class="highlight">10–25 hours/week</span> and reduce manual work by up to <span class="highlight">80%</span>.
+      </p>
+
+      <div class="hero-cta">
+        <a href="mailto:techvavdf@gmail.com" class="btn-primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+          Get in Touch
+        </a>
+        <a href="https://vinztechy.onrender.com" target="_blank" rel="noopener" class="btn-ghost">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Live Portfolio
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-num">20<span style="font-size:1.5rem;color:var(--gold-dim);">+</span></div>
+          <div class="stat-label">Automation Systems Built</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">80<span style="font-size:1.5rem;color:var(--gold-dim);">%</span></div>
+          <div class="stat-label">Manual Work Reduction</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">25<span style="font-size:1.5rem;color:var(--gold-dim);">h</span></div>
+          <div class="stat-label">Hours Saved Per Week</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">01 — About</span>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="about-grid fade-in">
+        <div>
+          <h2 class="section-title">Building systems that<br /><em>work while you sleep</em></h2>
+          <div class="about-text">
+            <p>
+              I'm an AI Automation Specialist based in <span class="highlight">Cavite, Philippines</span>, passionate about eliminating repetitive work through intelligent systems. My stack spans Zapier, Make.com, n8n, and GoHighLevel — connected with AI tools like OpenAI and Google Gemini.
+            </p>
+            <p>
+              Every workflow I build is documented, scalable, and designed for real-world reliability. I combine technical precision with a background in operations management to deliver systems that teams can actually trust.
+            </p>
+            <p style="margin-top:1.25rem;">
+              <span class="highlight">English (Fluent)</span> · <span class="highlight">Filipino (Native)</span> · Part-time Remote
+            </p>
+          </div>
+        </div>
+
+        <div class="contact-details">
+          <a href="mailto:techvavdf@gmail.com" class="contact-row">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+            </div>
+            <div>
+              <div class="contact-label">Email</div>
+              <div class="contact-value">techvavdf@gmail.com</div>
+            </div>
+          </a>
+
+          <a href="tel:+639603007605" class="contact-row">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.02 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+            </div>
+            <div>
+              <div class="contact-label">Phone</div>
+              <div class="contact-value">+63 960 300 7605</div>
+            </div>
+          </a>
+
+          <a href="https://linkedin.com/in/vincentdelaraautomation" target="_blank" rel="noopener" class="contact-row">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            </div>
+            <div>
+              <div class="contact-label">LinkedIn</div>
+              <div class="contact-value">vincentdelaraautomation</div>
+            </div>
+          </a>
+
+          <a href="https://vinztechy.onrender.com" target="_blank" rel="noopener" class="contact-row">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+            </div>
+            <div>
+              <div class="contact-label">Portfolio</div>
+              <div class="contact-value">vinztechy.onrender.com</div>
+            </div>
+          </a>
+
+          <div class="contact-row" style="cursor:default;">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div>
+              <div class="contact-label">Location</div>
+              <div class="contact-value">Cavite, Philippines</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">02 — Skills</span>
+        <div class="section-line"></div>
+      </div>
+
+      <h2 class="section-title fade-in" style="margin-bottom:2.5rem;">Core <em>Capabilities</em></h2>
+
+      <div class="skills-grid">
+        <div class="skill-card fade-in">
+          <div class="skill-category">Automation Platforms</div>
+          <h3>Workflow Automation</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">Zapier</span>
+            <span class="skill-tag">Make.com</span>
+            <span class="skill-tag">n8n</span>
+            <span class="skill-tag">Google Apps Script</span>
+          </div>
+        </div>
+
+        <div class="skill-card fade-in">
+          <div class="skill-category">CRM Systems</div>
+          <h3>Customer Relationship</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">GoHighLevel</span>
+            <span class="skill-tag">HubSpot</span>
+            <span class="skill-tag">Pipedrive</span>
+          </div>
+        </div>
+
+        <div class="skill-card fade-in">
+          <div class="skill-category">AI & Intelligence</div>
+          <h3>AI-Powered Systems</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">OpenAI</span>
+            <span class="skill-tag">Google Gemini</span>
+            <span class="skill-tag">Microsoft Copilot</span>
+          </div>
+        </div>
+
+        <div class="skill-card fade-in">
+          <div class="skill-category">Project Management</div>
+          <h3>Operations & Planning</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">Notion</span>
+            <span class="skill-tag">Airtable</span>
+            <span class="skill-tag">Asana</span>
+            <span class="skill-tag">Monday.com</span>
+          </div>
+        </div>
+
+        <div class="skill-card fade-in">
+          <div class="skill-category">Web & Documentation</div>
+          <h3>Web Tools</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">WordPress</span>
+            <span class="skill-tag">Landing Pages</span>
+            <span class="skill-tag">Workflow Docs</span>
+          </div>
+        </div>
+
+        <div class="skill-card fade-in" style="border-color:rgba(61,214,163,0.2);background:rgba(61,214,163,0.03);">
+          <div class="skill-category" style="color:var(--mint);">Strengths</div>
+          <h3>Professional Traits</h3>
+          <div class="skill-tags">
+            <span class="skill-tag" style="border-color:rgba(61,214,163,0.2);color:var(--mint-dim);">Detail-Oriented</span>
+            <span class="skill-tag" style="border-color:rgba(61,214,163,0.2);color:var(--mint-dim);">Fast Learner</span>
+            <span class="skill-tag" style="border-color:rgba(61,214,163,0.2);color:var(--mint-dim);">Documentation</span>
+            <span class="skill-tag" style="border-color:rgba(61,214,163,0.2);color:var(--mint-dim);">Scalable Systems</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACHIEVEMENTS -->
+  <section id="achievements">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">03 — Results</span>
+        <div class="section-line"></div>
+      </div>
+
+      <h2 class="section-title fade-in" style="margin-bottom:2.5rem;">Measured <em>Impact</em></h2>
+
+      <div class="achievements-grid fade-in">
+        <div class="achievement-card">
+          <div class="achievement-num">20<sup>+</sup></div>
+          <div class="achievement-label">Automation systems built integrating 10+ tools per client</div>
+        </div>
+        <div class="achievement-card">
+          <div class="achievement-num">25<sup>h</sup></div>
+          <div class="achievement-label">Hours saved per week through workflow automation</div>
+        </div>
+        <div class="achievement-card">
+          <div class="achievement-num">80<sup>%</sup></div>
+          <div class="achievement-label">Reduction in manual tasks using AI assistants</div>
+        </div>
+        <div class="achievement-card">
+          <div class="achievement-num">50<sup>%</sup></div>
+          <div class="achievement-label">Fewer missed appointments via no-show recovery system</div>
+        </div>
+      </div>
+
+      <div class="achievement-list fade-in">
+        <div class="achievement-item">
+          <p>Increased lead response speed & conversions via CRM automation pipelines</p>
+        </div>
+        <div class="achievement-item">
+          <p>Built end-to-end automations for CRM, reporting, and communication systems</p>
+        </div>
+        <div class="achievement-item">
+          <p>Developed AI assistants that reduced repetitive work by up to 80% per client</p>
+        </div>
+        <div class="achievement-item">
+          <p>Created fully documented systems for scalability and long-term reliability</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">04 — Projects</span>
+        <div class="section-line"></div>
+      </div>
+
+      <h2 class="section-title fade-in" style="margin-bottom:2.5rem;">Selected <em>Work</em></h2>
+
+      <div class="projects-grid">
+        <div class="project-card fade-in">
+          <div class="project-top">
+            <div class="project-tag">Document Processing</div>
+            <h3>AI Document Assistant</h3>
+            <p>Automated end-to-end document processing pipeline leveraging AI to extract, classify, and route documents — eliminating manual data entry entirely.</p>
+          </div>
+          <div class="project-bottom">
+            <span class="project-tech">n8n</span>
+            <span class="project-tech">Google Gemini AI</span>
+            <span class="project-tech">Document OCR</span>
+          </div>
+        </div>
+
+        <div class="project-card fade-in">
+          <div class="project-top">
+            <div class="project-tag">Email Automation</div>
+            <h3>AI Email Automation</h3>
+            <p>Intelligent auto-response system that reads incoming emails, understands context, and drafts personalized replies — dramatically cutting response time.</p>
+          </div>
+          <div class="project-bottom">
+            <span class="project-tech">Make.com</span>
+            <span class="project-tech">Gmail API</span>
+            <span class="project-tech">OpenAI</span>
+          </div>
+        </div>
+
+        <div class="project-card fade-in">
+          <div class="project-top">
+            <div class="project-tag">CRM / Lead Nurturing</div>
+            <h3>Smart Lead Nurture System</h3>
+            <p>GoHighLevel SMS follow-up pipeline that automatically nurtures cold leads through personalized multi-touch sequences, boosting conversion rates.</p>
+          </div>
+          <div class="project-bottom">
+            <span class="project-tech">GoHighLevel</span>
+            <span class="project-tech">SMS Automation</span>
+            <span class="project-tech">CRM Workflows</span>
+          </div>
+        </div>
+
+        <div class="project-card fade-in">
+          <div class="project-top">
+            <div class="project-tag">Task Management</div>
+            <h3>Task Automation Hub</h3>
+            <p>Centralized task automation connecting Zapier, Asana, Gmail, and Google Drive — turning email triggers into structured project tasks automatically.</p>
+          </div>
+          <div class="project-bottom">
+            <span class="project-tech">Zapier</span>
+            <span class="project-tech">Asana</span>
+            <span class="project-tech">Gmail</span>
+            <span class="project-tech">Google Drive</span>
+          </div>
+        </div>
+
+        <div class="project-card fade-in">
+          <div class="project-top">
+            <div class="project-tag">Social Media</div>
+            <h3>Social Media Automation</h3>
+            <p>Full-cycle social automation from content scheduling via Google Sheets to Facebook API publishing and real-time Slack notifications for the team.</p>
+          </div>
+          <div class="project-bottom">
+            <span class="project-tech">Make.com</span>
+            <span class="project-tech">Facebook API</span>
+            <span class="project-tech">Google Sheets</span>
+            <span class="project-tech">Slack</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">05 — Experience</span>
+        <div class="section-line"></div>
+      </div>
+
+      <h2 class="section-title fade-in" style="margin-bottom:3rem;">Professional <em>History</em></h2>
+
+      <div class="timeline fade-in">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2025 — Present</div>
+          <div class="timeline-title">Automation & Systems Virtual Assistant</div>
+          <div class="timeline-company">Freelance · Remote</div>
+          <ul class="timeline-bullets">
+            <li>Built end-to-end automation for CRM, reporting, and business communications</li>
+            <li>Developed AI-powered assistants reducing manual workloads by up to 80%</li>
+            <li>Integrated 10+ tools per client using Zapier, Make.com, n8n, and GoHighLevel</li>
+            <li>Created comprehensive workflow documentation for scalability and reliability</li>
+          </ul>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background:var(--dim);box-shadow:none;"></div>
+          <div class="timeline-date">2017 — Present</div>
+          <div class="timeline-title">Material Warehouse Group Leader</div>
+          <div class="timeline-company">ROHM Philippines · On-site</div>
+          <ul class="timeline-bullets">
+            <li>Improved operational efficiency and inventory accuracy across warehouse operations</li>
+            <li>Applied process optimization strategies directly applicable to automation workflows</li>
+            <li>Led cross-functional teams and managed material supply chains at scale</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section id="education">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">06 — Education</span>
+        <div class="section-line"></div>
+      </div>
+
+      <h2 class="section-title fade-in" style="margin-bottom:2.5rem;">Education & <em>Certifications</em></h2>
+
+      <div class="edu-grid fade-in">
+        <div class="edu-card">
+          <div class="edu-icon">🎓</div>
+          <div>
+            <div class="edu-type">Degree</div>
+            <h3>Associate in Computer Technology</h3>
+            <p>Kolehiyo ng Lungsod ng Lipa</p>
+          </div>
+        </div>
+
+        <div class="edu-card">
+          <div class="edu-icon">⚡</div>
+          <div>
+            <div class="edu-type">Certification</div>
+            <h3>GoHighLevel Masterclass</h3>
+            <p>Automation & Funnels</p>
+          </div>
+        </div>
+
+        <div class="edu-card">
+          <div class="edu-icon">🔧</div>
+          <div>
+            <div class="edu-type">Certification</div>
+            <h3>No-Code Automation Course</h3>
+            <p>Zapier, Make.com, n8n</p>
+          </div>
+        </div>
+
+        <div class="edu-card">
+          <div class="edu-icon">🤝</div>
+          <div>
+            <div class="edu-type">Training</div>
+            <h3>Technical Virtual Assistant</h3>
+            <p>Professional VA Training Program</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container" style="width:100%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+      <div class="footer-name">Vincent de Lara Fitalvero</div>
+      <div style="display:flex;align-items:center;gap:1.5rem;">
+        <a href="https://linkedin.com/in/vincentdelaraautomation" target="_blank" rel="noopener" style="color:var(--muted);text-decoration:none;font-size:0.8rem;transition:color 0.2s ease;" onmouseover="this.style.color='var(--gold-light)'" onmouseout="this.style.color='var(--muted)'">LinkedIn</a>
+        <a href="https://vinztechy.onrender.com" target="_blank" rel="noopener" style="color:var(--muted);text-decoration:none;font-size:0.8rem;transition:color 0.2s ease;" onmouseover="this.style.color='var(--gold-light)'" onmouseout="this.style.color='var(--muted)'">Portfolio</a>
+        <a href="mailto:techvavdf@gmail.com" style="color:var(--muted);text-decoration:none;font-size:0.8rem;transition:color 0.2s ease;" onmouseover="this.style.color='var(--gold-light)'" onmouseout="this.style.color='var(--muted)'">Email</a>
+      </div>
+      <div class="footer-copy">© 2026 · Cavite, Philippines</div>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll-triggered fade-in
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, i * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Stagger children of grid containers
+    document.querySelectorAll('.skills-grid, .projects-grid, .achievements-grid, .achievement-list, .edu-grid').forEach(grid => {
+      const children = grid.querySelectorAll('.skill-card, .project-card, .achievement-card, .achievement-item, .edu-card');
+      children.forEach((child, i) => {
+        if (!child.classList.contains('fade-in')) {
+          child.classList.add('fade-in');
+          child.style.transitionDelay = `${i * 60}ms`;
+          observer.observe(child);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -4,7 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const PORT = 3000;
+const PORT = 3001;
 
 const MIME = {
   '.html': 'text/html',
@@ -24,7 +24,7 @@ const MIME = {
 };
 
 http.createServer((req, res) => {
-  let urlPath = req.url.split('?')[0];
+  let urlPath = decodeURIComponent(req.url.split('?')[0]);
   if (urlPath === '/') urlPath = '/index.html';
   const filePath = path.join(__dirname, urlPath);
   const ext = path.extname(filePath);
